@@ -17,7 +17,6 @@ jobs:
           - os: ubuntu-18.04
             TARGET: ubuntu
             CMD_BUILD: >
-                python3 -m pip install dependency-check
                 pyinstaller --onefile cli.py -n cli --additional-hooks-dir=hooks &&
                 mv dist/cli fosslight_bin_ubuntu18
             OUT_FILE_NAME: fosslight_bin_ubuntu18

@@ -6,12 +6,27 @@
 import logging
 import json
 import os
-import subprocess
+import sys
 import fosslight_util.constant as constant
 from ._binary import BinaryItem, OssItem, VulnerabilityItem
+from dependency_check import run as dependency_check_run
 
 
 logger = logging.getLogger(constant.LOGGER_NAME)
+
+
+def run_analysis(path_to_run, params, func):
+    try:
+        if path_to_run != "":
+            logger.info(f"|--- Path to analyze : {path_to_run}")
+            sys.argv = params
+            func()
+        else:
+            logger.info("Analyzing path is missing...")
+    except SystemExit:
+        pass
+    except Exception as ex:
+        logger.error(str(ex))
 
 
 def get_oss_ver(version):
@@ -98,9 +113,11 @@ def analyze_jar_file(path_to_find_bin):
     vulnerability_items = {}
 
     try:
-        command = f"dependency-check --scan {path_to_find_bin} --out {path_to_find_bin} --disableArchive --disableAssembly --disableRetireJS --disableNodeJS \
-                  --disableNodeAudit --disableNugetconf --disableNuspec --disableOpenSSL --disableOssIndex --disableBundleAudit -f ALL"
-        subprocess.run(command, shell=True)
+        command = ['dependency-check', '--scan', f'{path_to_find_bin}', '--out', f'{path_to_find_bin}',
+                   '--disableArchive', '--disableAssembly', '--disableRetireJS', '--disableNodeJS',
+                   '--disableNodeAudit', '--disableNugetconf', '--disableNuspec', '--disableOpenSSL',
+                   '--disableOssIndex', '--disableBundleAudit', '-f', 'ALL']
+        run_analysis(path_to_find_bin, command, dependency_check_run)
 
         json_file = os.path.join(path_to_find_bin, 'dependency-check-report.json')
 

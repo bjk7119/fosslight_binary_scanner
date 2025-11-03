@@ -21,7 +21,7 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
     - name: update changelog with gren
       env:
-        GREN_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GREN_GITHUB_TOKEN: ${{ github.token }}
       run: |
         npm install github-release-notes@0.17.3
         node_modules/.bin/gren changelog --override
@@ -30,11 +30,11 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "fosslight-dev@lge.com"
         git add CHANGELOG.md
-        git commit -m "Update ChangeLog"
+        git commit -m "Update ChangeLog" || echo "No changes to commit"
     - name: Push changes
-      uses: ad-m/github-push-action@master
+      uses: ad-m/github-push-action@v0.8.0
       with:
-        github_token: ${{ secrets.TOKEN }}
+        github_token: ${{ github.token }}
         branch: main
 
   build:
@@ -84,6 +84,6 @@ jobs:
       id: upload-release-asset
       uses: actions/upload-release-asset@v1.0.1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ github.token }}
       with:
         asset_path: ./${{ matrix.OUT_FILE_NAME}}

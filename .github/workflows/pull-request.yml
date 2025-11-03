@@ -9,7 +9,7 @@ on:
 jobs:
   check-commit-message:
     uses: bjk7119/.github/.github/workflows/base-check-commit-message.yml@main
-  secrets: inherit
+    secrets: inherit
 
   run_tox:
     runs-on: ubuntu-latest

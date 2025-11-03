@@ -8,8 +8,15 @@ on:
       - '*'
 jobs:
   check-commit-message:
-    uses: bjk7119/.github/.github/workflows/base-check-commit-message.yml@main
-    secrets: inherit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Commit message lint
+        uses: wagoid/commitlint-github-action@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   run_tox:
     runs-on: ubuntu-latest

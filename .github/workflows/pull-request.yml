@@ -9,18 +9,13 @@ on:
 jobs:
   check-commit-message:
     uses: bjk7119/.github/.github/workflows/base-check-commit-message.yml@main
-    with:
-      token: ${{ secrets.GITHUB_TOKEN }}
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    # secrets:
-    #   envPAT: ${{ secrets.GITHUB_TOKEN }}
+  secrets: inherit
 
   run_tox:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.12.x]
+  python-version: ["3.12"]
 
     steps:
     - uses: actions/checkout@v3
@@ -41,7 +36,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        python-version: [3.12.x]
+  python-version: ["3.12"]
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
